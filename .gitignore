@@ -1,0 +1,16 @@
+
+.vs/
+
+RedditEarDatabase/bin/
+
+RedditEarDatabase/obj/
+
+RedditEar/bin/
+
+RedditEar/obj/
+
+RedditEar/appsettings.Development.json
+
+RedditEar/appsettings.json
+
+.DS_Store
