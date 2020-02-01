@@ -35,12 +35,17 @@ namespace RedditEar
         {
             while (!stoppingToken.IsCancellationRequested)
             {
-                HashSet<string> keywords = new HashSet<string>();
-                keywords.Add("Trump");
-                keywords.Add("war");
+                _db.KeywordsUrlTable.Delete(DateTime.UtcNow);
 
-                await _keywordWorker.Process("/r/wallstreetbets", keywords, stoppingToken);
-                await Task.Delay(1000, stoppingToken);
+                HashSet<string> keywords = _db.KeywordsTable.Select();
+                HashSet<string> sources = _db.SourcesTable.Select();
+
+                foreach (var s in sources)
+                {
+                    await _keywordWorker.Process(s, keywords, stoppingToken);
+                }
+
+                await Task.Delay(100000, stoppingToken);
             }
         }
 
@@ -50,7 +55,6 @@ namespace RedditEar
             if (kfa == null) return;
 
             // TODO: check urls for multiple keyword hits
-            _logger.LogInformation("Keyword found: Keyword = {Keyword} Title = {Title} Url = {Url}", kfa.Keyword, kfa.Title, kfa.Url);
             _db.KeywordsUrlTable.Insert(DateTime.UtcNow.Date, kfa.Keyword, kfa.Url.ToString(), kfa.Title);
         }
     }
