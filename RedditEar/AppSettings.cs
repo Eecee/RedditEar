@@ -15,6 +15,7 @@ namespace RedditEar
     public class DatabaseSettings
     {
         public string ConnectionString { get; set; }
+        public int MaxDays { get; set; }
     }
 
     public class AppSettings

@@ -84,6 +84,24 @@ namespace RedditEarDatabase
             }
         }
 
+        public void DeleteBefore(DateTime date)
+        {
+            _connection.CheckOpen();
+
+            using (var command = _connection.CreateCommand())
+            {
+                if (date == null) _connection.ExecuteNonQuery("DELETE FROM KeywordsUrl");
+                else
+                {
+                    var dParam = _parameterHelper.GetParameter(DATE_PARAM, date.Date.ToFileTimeUtc(), _databaseType);
+                    command.Parameters.Add(dParam);
+
+                    command.CommandText = string.Format("DELETE FROM KeywordsUrl WHERE Date < {0}", DATE_PARAM);
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
         public void Insert(DateTime date, string keywords, string url, string title)
         {
             _connection.CheckOpen();

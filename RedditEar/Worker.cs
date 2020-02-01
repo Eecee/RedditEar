@@ -36,6 +36,7 @@ namespace RedditEar
             while (!stoppingToken.IsCancellationRequested)
             {
                 _db.KeywordsUrlTable.Delete(DateTime.UtcNow);
+                _db.KeywordsUrlTable.DeleteBefore(DateTime.UtcNow.AddDays(_settings.Value.DatabaseSettings.MaxDays));
 
                 HashSet<string> keywords = _db.KeywordsTable.Select();
                 HashSet<string> sources = _db.SourcesTable.Select();
